@@ -27,6 +27,7 @@
   "prefer-stable": true,
   "require": {
     "php": "^7.1",
+    "ext-json": "*",
     "phpgears/cqrs": "^0.1"
   },
   "require-dev": {

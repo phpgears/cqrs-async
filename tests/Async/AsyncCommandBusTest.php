@@ -16,6 +16,7 @@ namespace Gears\CQRS\Async\Tests;
 use Gears\CQRS\Async\AsyncCommandBus;
 use Gears\CQRS\Async\CommandQueue;
 use Gears\CQRS\Async\Discriminator\ClassCommandDiscriminator;
+use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use Gears\CQRS\CommandBus;
 use PHPUnit\Framework\TestCase;
@@ -26,6 +27,8 @@ class AsyncCommandBusTest extends TestCase
     {
         $busMock = $this->getMockBuilder(CommandBus::class)
             ->getMock();
+        $busMock->expects($this->never())
+            ->method('handle');
         /** @var CommandBus $busMock */
         $queueMock = $this->getMockBuilder(CommandQueue::class)
             ->getMock();
@@ -64,5 +67,29 @@ class AsyncCommandBusTest extends TestCase
         /* @var \Gears\CQRS\Async\Discriminator\CommandDiscriminator $discriminatorMock */
 
         (new AsyncCommandBus($busMock, $queueMock, $discriminatorMock))->handle(CommandStub::instance([]));
+    }
+
+    public function testReceivedCommand(): void
+    {
+        $busMock = $this->getMockBuilder(CommandBus::class)
+            ->getMock();
+        $busMock->expects($this->once())
+            ->method('handle');
+        /** @var CommandBus $busMock */
+        $queueMock = $this->getMockBuilder(CommandQueue::class)
+            ->getMock();
+        $queueMock->expects($this->never())
+            ->method('send');
+        /** @var CommandQueue $queueMock */
+        $discriminatorMock = $this->getMockBuilder(ClassCommandDiscriminator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $discriminatorMock->expects($this->never())
+            ->method('shouldEnqueue');
+        /* @var \Gears\CQRS\Async\Discriminator\CommandDiscriminator $discriminatorMock */
+
+        $command = new ReceivedCommand(CommandStub::instance([]));
+
+        (new AsyncCommandBus($busMock, $queueMock, $discriminatorMock))->handle($command);
     }
 }

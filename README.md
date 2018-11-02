@@ -43,7 +43,7 @@ use Gears\CQRS\Async\Discriminator\ParameterCommandDiscriminator;
 
 /* @var \Gears\CQRS\CommandBus $commandBus */
 
-/* @var Gears\CQRS\Async\CommandQueue $commandQueu */
+/* @var Gears\CQRS\Async\CommandQueue $commandQueue */
 $commandQueue = new CustomCommandQueue(new JsonCommandSerializer());
 
 $asyncCommandBus new AsyncCommandBus(
@@ -63,7 +63,26 @@ This part is highly dependent on your message queue, though command serializers 
 
 This is just an example of the process
 
+```php
+use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
+
+/* @var \Gears\CQRS\Async\AsyncCommandBus $asyncCommandBus */
+/* @var your_message_queue_manager $queue */
+
+$serializer = new JsonCommandSerializer();
+
+while (true) {
+  $message = $queue->getMessage();
+
+  if ($message !== null) {
+    $asyncCommandBus->handle($serializer->fromSerialized($message))
+  }
+}
 ```
+
+Deserialized commands are wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops when handling the command on the bus. If you want to use the non-async command bus on the dequeue side simply extract the original command
+
+```php
 use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
 
 /* @var \Gears\CQRS\CommandBus $commandBus */
@@ -75,12 +94,12 @@ while (true) {
   $message = $queue->getMessage();
   
   if ($message !== null) {
-    $commandBus->handle($serializer->fromSerialized($message))
+    $originalCommand = $serializer->fromSerialized($message)->getOriginalCommand();
+
+    $commandBus->handle($originalCommand)
   }
 }
 ```
-
-Be aware that commands retrieved from the messaging system are being handed to the original CommandBus and not the one decorated with `AsyncCommandBus`. This is very important because otherwise your commands will be continuously enqueued in an infinite loop 
 
 ### Discriminator
 

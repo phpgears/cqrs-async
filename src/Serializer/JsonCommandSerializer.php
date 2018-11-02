@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Serializer;
 
+use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Command;
 
@@ -23,6 +24,7 @@ final class JsonCommandSerializer implements CommandSerializer
      * Preserve float values and encode &, ', ", < and > characters in the resulting JSON.
      */
     private const JSON_ENCODE_OPTIONS = \JSON_UNESCAPED_UNICODE
+        | \JSON_UNESCAPED_SLASHES
         | \JSON_PRESERVE_ZERO_FRACTION
         | \JSON_HEX_AMP
         | \JSON_HEX_APOS
@@ -36,11 +38,7 @@ final class JsonCommandSerializer implements CommandSerializer
     private const JSON_DECODE_OPTIONS = \JSON_BIGINT_AS_STRING;
 
     /**
-     * Get serialized from command.
-     *
-     * @param Command $command
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function serialize(Command $command): string
     {
@@ -66,15 +64,9 @@ final class JsonCommandSerializer implements CommandSerializer
     }
 
     /**
-     * Get command from serialized.
-     *
-     * @param string $serialized
-     *
-     * @throws CommandSerializationException
-     *
-     * @return Command
+     * {@inheritdoc}
      */
-    public function fromSerialized(string $serialized): Command
+    public function fromSerialized(string $serialized): ReceivedCommand
     {
         ['class' => $commandClass, 'payload' => $payload] = $this->getCommandDefinition($serialized);
 
@@ -93,7 +85,7 @@ final class JsonCommandSerializer implements CommandSerializer
         // @codeCoverageIgnoreStart
         try {
             /* @var Command $commandClass */
-            return $commandClass::reconstitute($payload);
+            return new ReceivedCommand($commandClass::reconstitute($payload));
         } catch (\Exception $exception) {
             throw new CommandSerializationException('Error reconstituting command', 0, $exception);
         }

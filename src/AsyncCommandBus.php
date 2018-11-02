@@ -64,10 +64,14 @@ class AsyncCommandBus implements CommandBus
      */
     final public function handle(Command $command): void
     {
-        if ($this->discriminator->shouldEnqueue($command)) {
+        if (!$command instanceof ReceivedCommand && $this->discriminator->shouldEnqueue($command)) {
             $this->queue->send($command);
 
             return;
+        }
+
+        if ($command instanceof ReceivedCommand) {
+            $command = $command->getOriginalCommand();
         }
 
         $this->wrappedCommandBus->handle($command);
