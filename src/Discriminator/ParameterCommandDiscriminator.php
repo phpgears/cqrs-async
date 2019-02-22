@@ -15,7 +15,7 @@ namespace Gears\CQRS\Async\Discriminator;
 
 use Gears\CQRS\Command;
 
-class ParameterCommandDiscriminator implements CommandDiscriminator
+final class ParameterCommandDiscriminator implements CommandDiscriminator
 {
     /**
      * Command parameter name.
@@ -32,7 +32,7 @@ class ParameterCommandDiscriminator implements CommandDiscriminator
     private $value;
 
     /**
-     * AsyncCommandParameterDiscriminator constructor.
+     * ParameterCommandDiscriminator constructor.
      *
      * @param string     $parameter
      * @param mixed|null $value

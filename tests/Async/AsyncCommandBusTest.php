@@ -15,9 +15,10 @@ namespace Gears\CQRS\Async\Tests;
 
 use Gears\CQRS\Async\AsyncCommandBus;
 use Gears\CQRS\Async\CommandQueue;
-use Gears\CQRS\Async\Discriminator\ClassCommandDiscriminator;
+use Gears\CQRS\Async\Discriminator\CommandDiscriminator;
 use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
+use Gears\CQRS\Command;
 use Gears\CQRS\CommandBus;
 use PHPUnit\Framework\TestCase;
 
@@ -35,13 +36,12 @@ class AsyncCommandBusTest extends TestCase
         $queueMock->expects($this->once())
             ->method('send');
         /** @var CommandQueue $queueMock */
-        $discriminatorMock = $this->getMockBuilder(ClassCommandDiscriminator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $discriminatorMock->expects($this->once())
-            ->method('shouldEnqueue')
-            ->will($this->returnValue(true));
-        /* @var \Gears\CQRS\Async\Discriminator\CommandDiscriminator $discriminatorMock */
+        $discriminatorMock = new class() implements CommandDiscriminator {
+            public function shouldEnqueue(Command $command): bool
+            {
+                return true;
+            }
+        };
 
         (new AsyncCommandBus($busMock, $queueMock, $discriminatorMock))->handle(CommandStub::instance([]));
     }
@@ -58,13 +58,12 @@ class AsyncCommandBusTest extends TestCase
         $queueMock->expects($this->never())
             ->method('send');
         /** @var CommandQueue $queueMock */
-        $discriminatorMock = $this->getMockBuilder(ClassCommandDiscriminator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $discriminatorMock->expects($this->once())
-            ->method('shouldEnqueue')
-            ->will($this->returnValue(false));
-        /* @var \Gears\CQRS\Async\Discriminator\CommandDiscriminator $discriminatorMock */
+        $discriminatorMock = new class() implements CommandDiscriminator {
+            public function shouldEnqueue(Command $command): bool
+            {
+                return false;
+            }
+        };
 
         (new AsyncCommandBus($busMock, $queueMock, $discriminatorMock))->handle(CommandStub::instance([]));
     }
@@ -81,12 +80,12 @@ class AsyncCommandBusTest extends TestCase
         $queueMock->expects($this->never())
             ->method('send');
         /** @var CommandQueue $queueMock */
-        $discriminatorMock = $this->getMockBuilder(ClassCommandDiscriminator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $discriminatorMock->expects($this->never())
-            ->method('shouldEnqueue');
-        /* @var \Gears\CQRS\Async\Discriminator\CommandDiscriminator $discriminatorMock */
+        $discriminatorMock = new class() implements CommandDiscriminator {
+            public function shouldEnqueue(Command $command): bool
+            {
+                return true;
+            }
+        };
 
         $command = new ReceivedCommand(CommandStub::instance([]));
 

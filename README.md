@@ -105,10 +105,11 @@ while (true) {
 
 Discriminates whether a command should or should not be enqueued based on arbitrary conditions
 
-Two discriminators are provided in this package
+Three discriminators are provided in this package
 
-* `Gears\CQRS\Async\Discriminator\ClassCommandDiscriminator` which selects commands by their class or interface
- * `Gears\CQRS\Async\Discriminator\ParameterCommandDiscriminator` which does it by the presence of a command payload parameter (optionally by its value as well)
+* `Gears\CQRS\Async\Discriminator\ArrayCommandDiscriminator` selects commands if they are present in the array provided
+* `Gears\CQRS\Async\Discriminator\ClassCommandDiscriminator` selects commands by their class or interface
+ * `Gears\CQRS\Async\Discriminator\ParameterCommandDiscriminator` selects commands by the presence of a command payload parameter (optionally by its value as well)
 
 ### Command queue
 

@@ -15,21 +15,21 @@ namespace Gears\CQRS\Async\Discriminator;
 
 use Gears\CQRS\Command;
 
-final class ClassCommandDiscriminator implements CommandDiscriminator
+final class ArrayCommandDiscriminator implements CommandDiscriminator
 {
     /**
-     * @var string
+     * @var string[]
      */
-    private $class;
+    private $commands;
 
     /**
-     * ClassCommandDiscriminator constructor.
+     * ArrayCommandDiscriminator constructor.
      *
-     * @param string $class
+     * @param string[] $commands
      */
-    public function __construct(string $class)
+    public function __construct(array $commands)
     {
-        $this->class = $class;
+        $this->commands = \array_values($commands);
     }
 
     /**
@@ -37,6 +37,6 @@ final class ClassCommandDiscriminator implements CommandDiscriminator
      */
     public function shouldEnqueue(Command $command): bool
     {
-        return \is_a($command, $this->class);
+        return \in_array(\get_class($command), $this->commands, true);
     }
 }
