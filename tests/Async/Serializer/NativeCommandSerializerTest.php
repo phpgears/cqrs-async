@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Tests;
 
-use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Serializer\NativeCommandSerializer;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +37,7 @@ class NativeCommandSerializerTest extends TestCase
 
         $deserialized = (new NativeCommandSerializer())->fromSerialized(\serialize($command));
 
-        $this->assertEquals(new ReceivedCommand($command), $deserialized);
+        $this->assertEquals($command, $deserialized);
     }
 
     /**

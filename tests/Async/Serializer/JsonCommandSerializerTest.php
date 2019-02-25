@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Tests;
 
-use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +33,7 @@ class JsonCommandSerializerTest extends TestCase
 
     public function testDeserialize(): void
     {
-        $command = new ReceivedCommand(CommandStub::instance(['identifier' => '1234']));
+        $command = CommandStub::instance(['identifier' => '1234']);
         $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
             . '"payload":{"identifier":"1234"}}';
 

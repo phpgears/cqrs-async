@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Serializer;
 
-use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Command;
 
 interface CommandSerializer
@@ -36,7 +35,7 @@ interface CommandSerializer
      *
      * @throws \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
      *
-     * @return ReceivedCommand
+     * @return Command
      */
-    public function fromSerialized(string $serialized): ReceivedCommand;
+    public function fromSerialized(string $serialized): Command;
 }

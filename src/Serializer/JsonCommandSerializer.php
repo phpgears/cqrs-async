@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Serializer;
 
-use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Command;
 
@@ -66,7 +65,7 @@ final class JsonCommandSerializer implements CommandSerializer
     /**
      * {@inheritdoc}
      */
-    public function fromSerialized(string $serialized): ReceivedCommand
+    public function fromSerialized(string $serialized): Command
     {
         ['class' => $commandClass, 'payload' => $payload] = $this->getCommandDefinition($serialized);
 
@@ -85,7 +84,7 @@ final class JsonCommandSerializer implements CommandSerializer
         // @codeCoverageIgnoreStart
         try {
             /* @var Command $commandClass */
-            return new ReceivedCommand($commandClass::reconstitute($payload));
+            return $commandClass::reconstitute($payload);
         } catch (\Exception $exception) {
             throw new CommandSerializationException('Error reconstituting command', 0, $exception);
         }

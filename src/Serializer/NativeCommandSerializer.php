@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Serializer;
 
-use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Command;
 
@@ -30,7 +29,7 @@ final class NativeCommandSerializer implements CommandSerializer
     /**
      * {@inheritdoc}
      */
-    public function fromSerialized(string $serialized): ReceivedCommand
+    public function fromSerialized(string $serialized): Command
     {
         $command = \unserialize($serialized);
 
@@ -38,6 +37,6 @@ final class NativeCommandSerializer implements CommandSerializer
             throw new CommandSerializationException('Invalid unserialized command');
         }
 
-        return new ReceivedCommand($command);
+        return $command;
     }
 }
