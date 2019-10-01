@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Tests;
 
+use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Async\Serializer\NativeCommandSerializer;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +29,7 @@ class NativeCommandSerializerTest extends TestCase
 
         $serialized = (new NativeCommandSerializer())->serialize($command);
 
-        $this->assertContains('a:1:{s:10:"identifier";s:4:"1234";}', $serialized);
+        static::assertContains('a:1:{s:10:"identifier";s:4:"1234";}', $serialized);
     }
 
     public function testDeserialize(): void
@@ -37,15 +38,14 @@ class NativeCommandSerializerTest extends TestCase
 
         $deserialized = (new NativeCommandSerializer())->fromSerialized(\serialize($command));
 
-        $this->assertEquals($command, $deserialized);
+        static::assertEquals($command, $deserialized);
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
-     * @expectedExceptionMessage Invalid unserialized command
-     */
     public function testInvalidDeserialization(): void
     {
+        $this->expectException(CommandSerializationException::class);
+        $this->expectExceptionMessage('Invalid unserialized command');
+
         (new NativeCommandSerializer())->fromSerialized(\serialize(new \stdClass()));
     }
 }

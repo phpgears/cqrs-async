@@ -24,7 +24,7 @@ class AbstractCommandQueueTest extends TestCase
     {
         $serializer = $this->getMockBuilder(CommandSerializer::class)
             ->getMock();
-        $serializer->expects($this->once())
+        $serializer->expects(static::once())
             ->method('serialize');
         /* @var CommandSerializer $serializer */
 

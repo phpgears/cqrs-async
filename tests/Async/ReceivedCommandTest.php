@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Tests;
 
+use Gears\CQRS\Async\Exception\ReceivedCommandException;
 use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use PHPUnit\Framework\TestCase;
@@ -25,42 +26,38 @@ class ReceivedCommandTest extends TestCase
 
         $command = new ReceivedCommand($originalCommand);
 
-        $this->assertSame($originalCommand, $command->getOriginalCommand());
+        static::assertSame($originalCommand, $command->getOriginalCommand());
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Exception\ReceivedCommandException
-     * @expectedExceptionMessage Method Gears\CQRS\Async\ReceivedCommand::has should not be called
-     */
     public function testHasException(): void
     {
+        $this->expectException(ReceivedCommandException::class);
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::has should not be called');
+
         (new ReceivedCommand(CommandStub::instance([])))->has('');
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Exception\ReceivedCommandException
-     * @expectedExceptionMessage Method Gears\CQRS\Async\ReceivedCommand::get should not be called
-     */
     public function testGetException(): void
     {
+        $this->expectException(ReceivedCommandException::class);
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::get should not be called');
+
         (new ReceivedCommand(CommandStub::instance([])))->get('');
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Exception\ReceivedCommandException
-     * @expectedExceptionMessage Method Gears\CQRS\Async\ReceivedCommand::getPayload should not be called
-     */
     public function testGetPayloadException(): void
     {
+        $this->expectException(ReceivedCommandException::class);
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getPayload should not be called');
+
         (new ReceivedCommand(CommandStub::instance([])))->getPayload();
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Exception\ReceivedCommandException
-     * @expectedExceptionMessage Method Gears\CQRS\Async\ReceivedCommand::reconstitute should not be called
-     */
     public function testReconstituteException(): void
     {
+        $this->expectException(ReceivedCommandException::class);
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::reconstitute should not be called');
+
         ReceivedCommand::reconstitute([]);
     }
 }

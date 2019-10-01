@@ -26,15 +26,15 @@ class ParameterCommandDiscriminatorTest extends TestCase
     {
         $discriminator = new ParameterCommandDiscriminator('identifier');
 
-        $this->assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => null])));
-        $this->assertFalse($discriminator->shouldEnqueue(CommandStub::instance([])));
+        static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => null])));
+        static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance([])));
     }
 
     public function testDiscriminateParameterValue(): void
     {
         $discriminator = new ParameterCommandDiscriminator('identifier', '1234');
 
-        $this->assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => '1234'])));
-        $this->assertFalse($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => true])));
+        static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => '1234'])));
+        static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => true])));
     }
 }

@@ -28,12 +28,12 @@ class AsyncCommandBusTest extends TestCase
     {
         $busMock = $this->getMockBuilder(CommandBus::class)
             ->getMock();
-        $busMock->expects($this->never())
+        $busMock->expects(static::never())
             ->method('handle');
         /** @var CommandBus $busMock */
         $queueMock = $this->getMockBuilder(CommandQueue::class)
             ->getMock();
-        $queueMock->expects($this->once())
+        $queueMock->expects(static::once())
             ->method('send');
         /** @var CommandQueue $queueMock */
         $discriminatorMock = new class() implements CommandDiscriminator {
@@ -50,12 +50,12 @@ class AsyncCommandBusTest extends TestCase
     {
         $busMock = $this->getMockBuilder(CommandBus::class)
             ->getMock();
-        $busMock->expects($this->once())
+        $busMock->expects(static::once())
             ->method('handle');
         /** @var CommandBus $busMock */
         $queueMock = $this->getMockBuilder(CommandQueue::class)
             ->getMock();
-        $queueMock->expects($this->never())
+        $queueMock->expects(static::never())
             ->method('send');
         /** @var CommandQueue $queueMock */
         $discriminatorMock = new class() implements CommandDiscriminator {
@@ -72,12 +72,12 @@ class AsyncCommandBusTest extends TestCase
     {
         $busMock = $this->getMockBuilder(CommandBus::class)
             ->getMock();
-        $busMock->expects($this->once())
+        $busMock->expects(static::once())
             ->method('handle');
         /** @var CommandBus $busMock */
         $queueMock = $this->getMockBuilder(CommandQueue::class)
             ->getMock();
-        $queueMock->expects($this->never())
+        $queueMock->expects(static::never())
             ->method('send');
         /** @var CommandQueue $queueMock */
         $discriminatorMock = new class() implements CommandDiscriminator {

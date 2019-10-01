@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Tests;
 
+use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +29,7 @@ class JsonCommandSerializerTest extends TestCase
 
         $serialized = (new JsonCommandSerializer())->serialize($command);
 
-        $this->assertContains('"payload":{"identifier":"1234"}', $serialized);
+        static::assertContains('"payload":{"identifier":"1234"}', $serialized);
     }
 
     public function testDeserialize(): void
@@ -39,55 +40,52 @@ class JsonCommandSerializerTest extends TestCase
 
         $deserialized = (new JsonCommandSerializer())->fromSerialized($serialized);
 
-        $this->assertEquals($command, $deserialized);
+        static::assertEquals($command, $deserialized);
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
-     * @expectedExceptionMessage Malformed JSON serialized command: empty string
-     */
     public function testEmptyDeserialization(): void
     {
+        $this->expectException(CommandSerializationException::class);
+        $this->expectExceptionMessage('Malformed JSON serialized command: empty string');
+
         (new JsonCommandSerializer())->fromSerialized('    ');
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
-     * @expectedExceptionMessage Malformed JSON serialized command
-     */
     public function testMissingPartsDeserialization(): void
     {
+        $this->expectException(CommandSerializationException::class);
+        $this->expectExceptionMessage('Malformed JSON serialized command');
+
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub"}');
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
-     * @expectedExceptionMessage Malformed JSON serialized command
-     */
     public function testWrongTypeDeserialization(): void
     {
+        $this->expectException(CommandSerializationException::class);
+        $this->expectExceptionMessage('Malformed JSON serialized command');
+
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
                 . '"payload":"1234"}');
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
-     * @expectedExceptionMessage Command class Gears\Unknown cannot be found
-     */
     public function testMissingClassDeserialization(): void
     {
+        $this->expectException(CommandSerializationException::class);
+        $this->expectExceptionMessage('Command class Gears\Unknown cannot be found');
+
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\Unknown","payload":{"identifier":"1234"}}');
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Async\Serializer\Exception\CommandSerializationException
-     * @expectedExceptionMessageRegExp /^Command class must implement .+\\Command, .+\\JsonCommandSerializer given$/
-     */
     public function testWrongClassTypeDeserialization(): void
     {
+        $this->expectException(CommandSerializationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Command class must implement .+\\\Command, .+\\\JsonCommandSerializer given$/'
+        );
+
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Serializer\\\\JsonCommandSerializer",'
                 . '"payload":{"identifier":"1234"}}');

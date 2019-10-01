@@ -30,7 +30,7 @@ class ClassCommandDiscriminatorTest extends TestCase
         /** @var \Gears\CQRS\Command $commandMock */
         $discriminator = new ClassCommandDiscriminator(\get_class($commandMock));
 
-        $this->assertTrue($discriminator->shouldEnqueue($commandMock));
-        $this->assertFalse($discriminator->shouldEnqueue(CommandStub::instance()));
+        static::assertTrue($discriminator->shouldEnqueue($commandMock));
+        static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance()));
     }
 }
