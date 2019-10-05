@@ -27,6 +27,9 @@ class ArrayCommandDiscriminatorTest extends TestCase
         $commandMock = $this->getMockBuilder(CommandStub::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $commandMock->expects(static::any())
+            ->method('getCommandType')
+            ->will(static::returnValue(\get_class($commandMock)));
         /** @var \Gears\CQRS\Command $commandMock */
         $discriminator = new ArrayCommandDiscriminator([\get_class($commandMock)]);
 

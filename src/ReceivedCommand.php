@@ -48,6 +48,16 @@ final class ReceivedCommand implements Command
      *
      * @throws ReceivedCommandException
      */
+    public function getCommandType(): string
+    {
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws ReceivedCommandException
+     */
     public function has(string $parameter): bool
     {
         throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));

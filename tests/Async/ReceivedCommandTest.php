@@ -29,6 +29,14 @@ class ReceivedCommandTest extends TestCase
         static::assertSame($originalCommand, $command->getOriginalCommand());
     }
 
+    public function testTypeException(): void
+    {
+        $this->expectException(ReceivedCommandException::class);
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getCommandType should not be called');
+
+        (new ReceivedCommand(CommandStub::instance([])))->getCommandType();
+    }
+
     public function testHasException(): void
     {
         $this->expectException(ReceivedCommandException::class);

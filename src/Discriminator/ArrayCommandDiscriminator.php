@@ -20,16 +20,16 @@ final class ArrayCommandDiscriminator implements CommandDiscriminator
     /**
      * @var string[]
      */
-    private $commands;
+    private $commandTypes;
 
     /**
      * ArrayCommandDiscriminator constructor.
      *
-     * @param string[] $commands
+     * @param string[] $commandTypes
      */
-    public function __construct(array $commands)
+    public function __construct(array $commandTypes)
     {
-        $this->commands = \array_values($commands);
+        $this->commandTypes = \array_values($commandTypes);
     }
 
     /**
@@ -37,6 +37,6 @@ final class ArrayCommandDiscriminator implements CommandDiscriminator
      */
     public function shouldEnqueue(Command $command): bool
     {
-        return \in_array(\get_class($command), $this->commands, true);
+        return \in_array($command->getCommandType(), $this->commandTypes, true);
     }
 }
