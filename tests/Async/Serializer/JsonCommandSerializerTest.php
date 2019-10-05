@@ -27,9 +27,12 @@ class JsonCommandSerializerTest extends TestCase
     {
         $command = CommandStub::instance(['identifier' => '1234']);
 
+        $expected = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
+            . '"payload":{"identifier":"1234"}}';
+
         $serialized = (new JsonCommandSerializer())->serialize($command);
 
-        static::assertContains('"payload":{"identifier":"1234"}', $serialized);
+        static::assertEquals($expected, $serialized);
     }
 
     public function testDeserialize(): void

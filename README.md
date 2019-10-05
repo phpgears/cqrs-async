@@ -83,7 +83,7 @@ while (true) {
 }
 ```
 
-Deserialized commands should be wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops should you decide to handle the commands on an async bus. If you decide to use a non-async bus on the dequeue side you don't need to do this
+Deserialized commands should be wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops should you decide to handle the commands to an async command bus. If you decide to use a non-async bus on the dequeue side you don't need to do this
 
 ### Discriminator
 
@@ -97,9 +97,11 @@ Three discriminators are provided in this package
 
 ### Command queue
 
-This is the one responsible for actual async handling, which would normally be send the serialized command to a message queue system such as RabbitMQ
+This is the one responsible for actual async handling, which would normally be sending the serialized command to a message queue system such as RabbitMQ
 
 No implementation is provided but an abstract base class so you can extend from it
+
+
 
 ```
 use Gears\CQRS\Async\AbstractCommandQueue;
@@ -113,18 +115,25 @@ class CustomCommandQueue extends AbstractCommandQueue
 }
 ```
 
+You can use [cqrs-async-queue-interop](https://github.com/phpgears/cqrs-async-queue-interop) that uses [queue-interop](https://github.com/queue-interop/queue-interop) for enqueuing messages
+
 ### Serializer
 
 Abstract command queue uses serializers to do command serialization so it can be sent to the message queue as a string message
 
-Two serializers are provided out of the box
+`Gears\CQRS\Async\Serializer\JsonCommandSerializer` is directly provided as a general serializer allowing maximum compatibility in case of commands being handled by other systems
 
-* `Gears\CQRS\Async\Serializer\JsonCommandSerializer` which is great in general or if you plan to use other languages aside PHP to handle async commands
-* `Gears\CQRS\Async\Serializer\NativeCommandSerializer` only advised if you're only going to use PHP to dequeue commands
+You can create your own serializer if the one provided does not fit your needs, for example by using _JMS serializer_, by implementing `Gears\CQRS\Async\Serializer\CommandSerializer` interface
 
-It's deadly simple to create your own if this two does not fit your needs by implementing `Gears\CQRS\Async\Serializer\CommandSerializer` interface
+### Distributed systems
 
-_This are helping classes that your custom implementation of `CommandQueue` might not need_
+On distributed systems, such as micro-service systems, commands can be dequeued on a completely different part of the system, this part should of course know about commands and their contents but could eventually not have access to the command class itself
+
+For example in the context of Domain Events on DDD a bounded context could handle command delivered by another completely different bounded context and of course won't be able to deserialize the original command as it is located on another domain
+
+This can be solved in one of two ways, transform messages coming out from the message queue before handing them to the command serializer, or better by creating a custom `Gears\CQRS\Async\Serializer\CommandSerializer` encapsulating this transformation
+
+_Transformation can be as simple as changing command class to be reconstituted_
 
 ## Contributing
 
