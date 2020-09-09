@@ -37,14 +37,6 @@ class ReceivedCommandTest extends TestCase
         (new ReceivedCommand(CommandStub::instance([])))->getCommandType();
     }
 
-    public function testHasException(): void
-    {
-        $this->expectException(ReceivedCommandException::class);
-        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::has should not be called');
-
-        (new ReceivedCommand(CommandStub::instance([])))->has('');
-    }
-
     public function testGetException(): void
     {
         $this->expectException(ReceivedCommandException::class);
@@ -59,6 +51,14 @@ class ReceivedCommandTest extends TestCase
         $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getPayload should not be called');
 
         (new ReceivedCommand(CommandStub::instance([])))->getPayload();
+    }
+
+    public function testToArrayException(): void
+    {
+        $this->expectException(ReceivedCommandException::class);
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::toArray should not be called');
+
+        (new ReceivedCommand(CommandStub::instance([])))->toArray();
     }
 
     public function testReconstituteException(): void

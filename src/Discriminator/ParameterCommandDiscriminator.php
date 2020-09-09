@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Gears\CQRS\Async\Discriminator;
 
 use Gears\CQRS\Command;
+use Gears\DTO\Exception\InvalidParameterException;
 
 final class ParameterCommandDiscriminator implements CommandDiscriminator
 {
@@ -48,7 +49,12 @@ final class ParameterCommandDiscriminator implements CommandDiscriminator
      */
     public function shouldEnqueue(Command $command): bool
     {
-        return $command->has($this->parameter)
-            && ($this->value === null || $command->get($this->parameter) === $this->value);
+        try {
+            $parameterValue = $command->get($this->parameter);
+        } catch (InvalidParameterException $exception) {
+            return false;
+        }
+
+        return $this->value === null || $parameterValue === $this->value;
     }
 }

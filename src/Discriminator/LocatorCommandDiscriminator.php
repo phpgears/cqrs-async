@@ -15,7 +15,7 @@ namespace Gears\CQRS\Async\Discriminator;
 
 use Gears\CQRS\Command;
 
-final class ArrayCommandDiscriminator implements CommandDiscriminator
+final class LocatorCommandDiscriminator implements CommandDiscriminator
 {
     /**
      * @var string[]

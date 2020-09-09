@@ -59,7 +59,7 @@ $asyncCommandBus->handle($asyncCommand);
 
 #### Dequeue
 
-This part is highly dependent on your message queue, though command serializers can be used to deserialize queue message
+This part is highly dependent on your message queue, though command serializers can be used to deserialize queue messages
 
 This is just an example of the process
 
@@ -83,15 +83,17 @@ while (true) {
 }
 ```
 
-Deserialized commands should be wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops should you decide to handle the commands to an async command bus. If you decide to use a non-async bus on the dequeue side you don't need to do this
+In this example the deserialized commands are wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops should you decide to handle the commands to **the same async command bus** that queued them in the first place. This can happen if you reuse the same configured queue in both sides, queueing and dequeueing, which can be done
+
+If you decide to use a non-async bus or **another async bus** (depending on your use-case) on the dequeue side you don't need to do this wrapping
 
 ### Discriminator
 
 Discriminates whether a command should or should not be enqueued based on arbitrary conditions
 
-Three discriminators are provided in this package
+Three discriminators come bundled in this package
 
-* `Gears\CQRS\Async\Discriminator\ArrayCommandDiscriminator` selects commands if they are present in the array provided
+* `Gears\CQRS\Async\Discriminator\LocatorCommandDiscriminator` selects commands if they are present in the array provided
 * `Gears\CQRS\Async\Discriminator\ClassCommandDiscriminator` selects commands by their class or interface
  * `Gears\CQRS\Async\Discriminator\ParameterCommandDiscriminator` selects commands by the presence of a command payload parameter (optionally by its value as well)
 
@@ -127,13 +129,11 @@ You can create your own serializer if the one provided does not fit your needs, 
 
 ### Distributed systems
 
-On distributed systems, such as micro-service systems, commands can be dequeued on a completely different part of the system, this part should of course know about commands and their contents but could eventually not have access to the command class itself
+On distributed systems, such as micro-service systems, commands can be dequeued on a completely different part of the system, this part should of course know about commands and their contents but could eventually not have access to the original command class itself and thus a transformation is needed
 
-For example in the context of Domain Events on DDD a bounded context could handle command delivered by another completely different bounded context and of course won't be able to deserialize the original command as it is located on another domain
+This can be solved either by transforming messages coming out from the message queue before handing them to the command serializer, or better by creating your custom `Gears\CQRS\Async\Serializer\CommandSerializer` encapsulating this transformation
 
-This can be solved in one of two ways, transform messages coming out from the message queue before handing them to the command serializer, or better by creating a custom `Gears\CQRS\Async\Serializer\CommandSerializer` encapsulating this transformation
-
-_Transformation can be as simple as changing command class to be reconstituted_
+In most cases the transformation will be as simple as changing the command class to the one the dequeueing side knows. At the end command payload will most probably stay the same
 
 ## Contributing
 

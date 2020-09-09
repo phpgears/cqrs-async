@@ -21,6 +21,11 @@ use Gears\CQRS\AbstractCommand;
 class CommandStub extends AbstractCommand
 {
     /**
+     * @var string
+     */
+    private $identifier;
+
+    /**
      * Instantiate command.
      *
      * @param mixed[] $parameters

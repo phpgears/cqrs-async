@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Gears\CQRS\Async\Tests;
+namespace Gears\CQRS\Async\Tests\Serializer;
 
 use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Async\Serializer\JsonCommandSerializer;

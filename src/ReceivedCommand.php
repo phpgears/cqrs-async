@@ -57,16 +57,6 @@ final class ReceivedCommand implements Command
      * {@inheritdoc}
      *
      * @throws ReceivedCommandException
-     */
-    public function has(string $parameter): bool
-    {
-        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws ReceivedCommandException
      *
      * @return mixed
      */
@@ -91,8 +81,20 @@ final class ReceivedCommand implements Command
      * {@inheritdoc}
      *
      * @throws ReceivedCommandException
+     *
+     * @return array<string, mixed>
      */
-    public static function reconstitute(array $parameters): void
+    public function toArray(): array
+    {
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws ReceivedCommandException
+     */
+    public static function reconstitute(iterable $parameters): void
     {
         throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
     }

@@ -44,7 +44,7 @@ final class JsonCommandSerializer implements CommandSerializer
         $serialized = \json_encode(
             [
                 'class' => \get_class($command),
-                'payload' => $command->getPayload(),
+                'payload' => $command->toArray(),
             ],
             static::JSON_ENCODE_OPTIONS
         );

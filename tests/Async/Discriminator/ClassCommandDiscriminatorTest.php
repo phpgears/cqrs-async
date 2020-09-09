@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Gears\CQRS\Async\Tests;
+namespace Gears\CQRS\Async\Tests\Discriminator;
 
 use Gears\CQRS\Async\Discriminator\ClassCommandDiscriminator;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;

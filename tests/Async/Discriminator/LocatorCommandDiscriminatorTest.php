@@ -11,16 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Gears\CQRS\Async\Tests;
+namespace Gears\CQRS\Async\Tests\Discriminator;
 
-use Gears\CQRS\Async\Discriminator\ArrayCommandDiscriminator;
+use Gears\CQRS\Async\Discriminator\LocatorCommandDiscriminator;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Array command discriminator test.
+ * Array locator command discriminator test.
  */
-class ArrayCommandDiscriminatorTest extends TestCase
+class LocatorCommandDiscriminatorTest extends TestCase
 {
     public function testDiscriminate(): void
     {
@@ -29,9 +29,9 @@ class ArrayCommandDiscriminatorTest extends TestCase
             ->getMock();
         $commandMock->expects(static::any())
             ->method('getCommandType')
-            ->will(static::returnValue(\get_class($commandMock)));
+            ->willReturn(\get_class($commandMock));
         /** @var \Gears\CQRS\Command $commandMock */
-        $discriminator = new ArrayCommandDiscriminator([\get_class($commandMock)]);
+        $discriminator = new LocatorCommandDiscriminator([\get_class($commandMock)]);
 
         static::assertTrue($discriminator->shouldEnqueue($commandMock));
         static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance()));

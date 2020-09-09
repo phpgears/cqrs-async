@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Gears\CQRS\Async\Tests;
+namespace Gears\CQRS\Async\Tests\Discriminator;
 
 use Gears\CQRS\Async\Discriminator\ParameterCommandDiscriminator;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
@@ -25,8 +25,9 @@ class ParameterCommandDiscriminatorTest extends TestCase
     public function testDiscriminateParameter(): void
     {
         $discriminator = new ParameterCommandDiscriminator('identifier');
-
         static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => null])));
+
+        $discriminator = new ParameterCommandDiscriminator('unknown');
         static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance([])));
     }
 
