@@ -26,7 +26,7 @@ class ReceivedCommandTest extends TestCase
 
         $command = new ReceivedCommand($originalCommand);
 
-        static::assertSame($originalCommand, $command->getOriginalCommand());
+        static::assertSame($originalCommand, $command->getWrappedCommand());
     }
 
     public function testTypeException(): void

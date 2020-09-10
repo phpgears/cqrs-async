@@ -27,23 +27,23 @@ class JsonCommandSerializerTest extends TestCase
     {
         $command = CommandStub::instance(['identifier' => '1234']);
 
-        $expected = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
+        $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
             . '"payload":{"identifier":"1234"}}';
 
-        $serialized = (new JsonCommandSerializer())->serialize($command);
-
-        static::assertEquals($expected, $serialized);
+        static::assertEquals($serialized, (new JsonCommandSerializer())->serialize($command));
     }
 
     public function testDeserialize(): void
     {
         $command = CommandStub::instance(['identifier' => '1234']);
+
         $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
             . '"payload":{"identifier":"1234"}}';
 
-        $deserialized = (new JsonCommandSerializer())->fromSerialized($serialized);
-
-        static::assertEquals($command, $deserialized);
+        static::assertEquals(
+            $command->getPayload(),
+            (new JsonCommandSerializer())->fromSerialized($serialized)->getPayload()
+        );
     }
 
     public function testEmptyDeserialization(): void
@@ -79,7 +79,7 @@ class JsonCommandSerializerTest extends TestCase
         $this->expectExceptionMessage('Command class Gears\Unknown cannot be found');
 
         (new JsonCommandSerializer())
-            ->fromSerialized('{"class":"Gears\\\\Unknown","payload":{"identifier":"1234"}}');
+            ->fromSerialized('{"class":"Gears\\\\Unknown","payload":{}}');
     }
 
     public function testWrongClassTypeDeserialization(): void
@@ -91,6 +91,6 @@ class JsonCommandSerializerTest extends TestCase
 
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Serializer\\\\JsonCommandSerializer",'
-                . '"payload":{"identifier":"1234"}}');
+                . '"payload":{}}');
     }
 }

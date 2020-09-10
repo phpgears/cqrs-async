@@ -21,26 +21,26 @@ final class ReceivedCommand implements Command
     /**
      * @var Command
      */
-    private $originalCommand;
+    private $wrappedCommand;
 
     /**
      * ReceivedCommand constructor.
      *
-     * @param Command $originalCommand
+     * @param Command $wrappedCommand
      */
-    public function __construct(Command $originalCommand)
+    public function __construct(Command $wrappedCommand)
     {
-        $this->originalCommand = $originalCommand;
+        $this->wrappedCommand = $wrappedCommand;
     }
 
     /**
-     * Get original command.
+     * Get wrapped command.
      *
      * @return Command
      */
-    public function getOriginalCommand(): Command
+    public function getWrappedCommand(): Command
     {
-        return $this->originalCommand;
+        return $this->wrappedCommand;
     }
 
     /**

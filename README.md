@@ -30,34 +30,7 @@ Require composer autoload file
 require './vendor/autoload.php';
 ```
 
-### Asynchronous Commands Bus
-
-Command bus decorator to handle commands asynchronously
-
-#### Enqueue
-
-```php
-use Gears\CQRS\Async\AsyncCommandBus;
-use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
-use Gears\CQRS\Async\Discriminator\ParameterCommandDiscriminator;
-
-/* @var \Gears\CQRS\CommandBus $commandBus */
-
-/* @var Gears\CQRS\Async\CommandQueue $commandQueue */
-$commandQueue = new CustomCommandQueue(new JsonCommandSerializer());
-
-$asyncCommandBus new AsyncCommandBus(
-    $commandBus,
-    $commandQueue,
-    new ParameterCommandDiscriminator('async')
-);
-
-$asyncCommand = new CustomCommand(['async' => true]);
-
-$asyncCommandBus->handle($asyncCommand);
-```
-
-#### Dequeue
+### Consume queued commands
 
 This part is highly dependent on your message queue, though command serializers can be used to deserialize queue messages
 
@@ -67,7 +40,7 @@ This is just an example of the process
 use Gears\CQRS\Async\ReceivedCommand;
 use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
 
-/* @var \Gears\CQRS\Async\AsyncCommandBus $asyncCommandBus */
+/* @var \Gears\CQRS\CommandBus $commandBus */
 /* @var your_message_queue_manager $queue */
 
 $serializer = new JsonCommandSerializer();
@@ -78,14 +51,14 @@ while (true) {
   if ($message !== null) {
     $command = new ReceivedCommand($serializer->fromSerialized($message));
 
-    $asyncCommandBus->handle($command);
+    $commandBus->handle($command);
   }
 }
 ```
 
-In this example the deserialized commands are wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops should you decide to handle the commands to **the same async command bus** that queued them in the first place. This can happen if you reuse the same configured queue in both sides, queueing and dequeueing, which can be done
+In this example the deserialized commands are wrapped in Gears\CQRS\Async\ReceivedCommand in order to avoid infinite loops should you decide to handle the commands to **the same command bus** that queued them in the first place. This can happen if you reuse the same configured queue in both sides, queueing and dequeueing, which can be done
 
-If you decide to use a non-async bus or **another async bus** (depending on your use-case) on the dequeue side you don't need to do this wrapping
+If you decide to use a non-async bus or **other bus than the one that queued the command** (depending on your use-case) on the dequeue side you don't need to do this wrapping
 
 ### Discriminator
 
@@ -103,10 +76,9 @@ This is the one responsible for actual async handling, which would normally be s
 
 No implementation is provided but an abstract base class so you can extend from it
 
-
-
-```
+```php
 use Gears\CQRS\Async\AbstractCommandQueue;
+use Gears\CQRS\Command;
 
 class CustomCommandQueue extends AbstractCommandQueue
 {
@@ -117,15 +89,18 @@ class CustomCommandQueue extends AbstractCommandQueue
 }
 ```
 
-You can use [cqrs-async-queue-interop](https://github.com/phpgears/cqrs-async-queue-interop) that uses [queue-interop](https://github.com/queue-interop/queue-interop) for enqueuing messages
+You can require [cqrs-async-queue-interop](https://github.com/phpgears/cqrs-async-queue-interop) that uses [queue-interop](https://github.com/queue-interop/queue-interop) for enqueuing messages
 
 ### Serializer
 
-Abstract command queue uses serializers to do command serialization so it can be sent to the message queue as a string message
+Abstract command queue uses serializers to do command serialization, so it can be sent to the message queue as a string message
 
-`Gears\CQRS\Async\Serializer\JsonCommandSerializer` is directly provided as a general serializer allowing maximum compatibility in case of commands being handled by other systems
+Two serializers are available out of the box
 
-You can create your own serializer if the one provided does not fit your needs, for example by using _JMS serializer_, by implementing `Gears\CQRS\Async\Serializer\CommandSerializer` interface
+* `Gears\CQRS\Async\Serializer\JsonCommandSerializer`, is a general serializer allowing maximum compatibility in case of commands being handled by other systems
+* `Gears\CQRS\Async\Serializer\NativePhpCommandSerializer`, is a PHP centric serializer employing PHP native serialization mechanism
+
+You can create your own serializer if the provided ones does not fit your needs, for example by using _JMS serializer_, by implementing `Gears\CQRS\Async\Serializer\CommandSerializer` interface
 
 ### Distributed systems
 
