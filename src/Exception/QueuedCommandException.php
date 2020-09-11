@@ -13,6 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Exception;
 
-class ReceivedCommandException extends \RuntimeException
+class QueuedCommandException extends \RuntimeException
 {
 }

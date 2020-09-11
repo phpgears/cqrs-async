@@ -24,8 +24,8 @@ class ParameterCommandDiscriminatorTest extends TestCase
 {
     public function testDiscriminateParameter(): void
     {
-        $discriminator = new ParameterCommandDiscriminator('identifier');
-        static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => null])));
+        $discriminator = new ParameterCommandDiscriminator('parameter');
+        static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['parameter' => null])));
 
         $discriminator = new ParameterCommandDiscriminator('unknown');
         static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance([])));
@@ -33,9 +33,9 @@ class ParameterCommandDiscriminatorTest extends TestCase
 
     public function testDiscriminateParameterValue(): void
     {
-        $discriminator = new ParameterCommandDiscriminator('identifier', '1234');
+        $discriminator = new ParameterCommandDiscriminator('parameter', 'value');
 
-        static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => '1234'])));
-        static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance(['identifier' => true])));
+        static::assertTrue($discriminator->shouldEnqueue(CommandStub::instance(['parameter' => 'value'])));
+        static::assertFalse($discriminator->shouldEnqueue(CommandStub::instance(['parameter' => true])));
     }
 }

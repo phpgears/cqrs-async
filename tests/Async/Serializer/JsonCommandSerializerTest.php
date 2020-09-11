@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Tests\Serializer;
 
+use Gears\CQRS\Async\QueuedCommand;
 use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Async\Serializer\JsonCommandSerializer;
 use Gears\CQRS\Async\Tests\Stub\CommandStub;
@@ -23,26 +24,53 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonCommandSerializerTest extends TestCase
 {
-    public function testSerialize(): void
+    /**
+     * @dataProvider serializationProvider
+     *
+     * @param CommandStub $stub
+     * @param string      $serialized
+     */
+    public function testSerialize(CommandStub $stub, string $serialized): void
     {
-        $command = CommandStub::instance(['identifier' => '1234']);
+        static::assertEquals($serialized, (new JsonCommandSerializer())->serialize($stub));
+    }
 
-        $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
-            . '"payload":{"identifier":"1234"}}';
-
+    /**
+     * @dataProvider queuedSerializationProvider
+     *
+     * @param QueuedCommand $command
+     * @param string        $serialized
+     */
+    public function testSerializeQueued(QueuedCommand $command, string $serialized): void
+    {
         static::assertEquals($serialized, (new JsonCommandSerializer())->serialize($command));
     }
 
-    public function testDeserialize(): void
+    /**
+     * @dataProvider serializationProvider
+     *
+     * @param CommandStub $stub
+     * @param string      $serialized
+     */
+    public function testDeserialize(CommandStub $stub, string $serialized): void
     {
-        $command = CommandStub::instance(['identifier' => '1234']);
-
-        $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
-            . '"payload":{"identifier":"1234"}}';
-
         static::assertEquals(
-            $command->getPayload(),
+            $stub->getPayload(),
             (new JsonCommandSerializer())->fromSerialized($serialized)->getPayload()
+        );
+    }
+
+    /**
+     * @dataProvider queuedSerializationProvider
+     *
+     * @param QueuedCommand $command
+     * @param string        $serialized
+     */
+    public function testDeserializeQueued(QueuedCommand $command, string $serialized): void
+    {
+        static::assertEquals(
+            $command->getWrappedCommand()->getPayload(),
+            (new JsonCommandSerializer())->fromSerialized($serialized)->getWrappedCommand()->getPayload()
         );
     }
 
@@ -70,7 +98,7 @@ class JsonCommandSerializerTest extends TestCase
 
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
-                . '"payload":"1234"}');
+                . '"payload":"value"}');
     }
 
     public function testMissingClassDeserialization(): void
@@ -92,5 +120,30 @@ class JsonCommandSerializerTest extends TestCase
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Serializer\\\\JsonCommandSerializer",'
                 . '"payload":{}}');
+    }
+
+    /**
+     * @return mixed[][]
+     */
+    public function serializationProvider(): array
+    {
+        $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
+            . '"payload":{"parameter":"value"}}';
+
+        return [[CommandStub::instance(['parameter' => 'value']), $serialized]];
+    }
+
+    /**
+     * @return mixed[][]
+     */
+    public function queuedSerializationProvider(): array
+    {
+        $serialized = '{"class":"Gears\\\\CQRS\\\\Async\\\\QueuedCommand","payload":{'
+            . '"wrappedCommand":"{'
+            . '\"class\":\"Gears\\\\\\\\CQRS\\\\\\\\Async\\\\\\\\Tests\\\\\\\\Stub\\\\\\\\CommandStub\",'
+            . '\"payload\":{\"parameter\":\"value\"}'
+            . '}"}}';
+
+        return [[new QueuedCommand(CommandStub::instance(['parameter' => 'value'])), $serialized]];
     }
 }

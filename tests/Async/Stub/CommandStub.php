@@ -23,7 +23,7 @@ class CommandStub extends AbstractCommand
     /**
      * @var string
      */
-    private $identifier;
+    private $parameter;
 
     /**
      * Instantiate command.

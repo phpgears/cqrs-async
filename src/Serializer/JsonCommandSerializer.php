@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Async\Serializer;
 
+use Gears\CQRS\Async\QueuedCommand;
 use Gears\CQRS\Async\Serializer\Exception\CommandSerializationException;
 use Gears\CQRS\Command;
 
@@ -27,7 +28,6 @@ final class JsonCommandSerializer implements CommandSerializer
         | \JSON_PRESERVE_ZERO_FRACTION
         | \JSON_HEX_AMP
         | \JSON_HEX_APOS
-        | \JSON_HEX_QUOT
         | \JSON_HEX_TAG;
 
     /**
@@ -41,10 +41,14 @@ final class JsonCommandSerializer implements CommandSerializer
      */
     public function serialize(Command $command): string
     {
+        $payload = $command instanceof QueuedCommand
+            ? ['wrappedCommand' => $this->serialize($command->getWrappedCommand())]
+            : $command->toArray();
+
         $serialized = \json_encode(
             [
                 'class' => \get_class($command),
-                'payload' => $command->toArray(),
+                'payload' => $payload,
             ],
             static::JSON_ENCODE_OPTIONS
         );
@@ -83,6 +87,10 @@ final class JsonCommandSerializer implements CommandSerializer
 
         // @codeCoverageIgnoreStart
         try {
+            if ($commandClass === QueuedCommand::class) {
+                $payload = ['wrappedCommand' => $this->fromSerialized($payload['wrappedCommand'])];
+            }
+
             /* @var Command $commandClass */
             return $commandClass::reconstitute($payload);
         } catch (\Exception $exception) {
