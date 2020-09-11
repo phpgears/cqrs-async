@@ -85,9 +85,9 @@ class QueuedCommandTest extends TestCase
                 . 's:14:"wrappedCommand";s:90:"O:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":1:{'
                 . 's:9:\"parameter\";s:5:\"value\";'
                 . '}";}'
-            : 'C:30:"Gears\CQRS\Async\QueuedCommand":127:{a:1:{'
-                . 's:14:\"wrappedCommand\";C:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":34:{a:1:{'
-                . 's:9:\"parameter\";s:5:\"value\";'
+            : 'C:30:"Gears\CQRS\Async\QueuedCommand":135:{a:1:{'
+                . 's:14:\"wrappedCommand\";C:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":38:{a:1:{'
+                . 's:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";'
                 . '}}}}';
 
         static::assertSame($serialized, \serialize($stub));

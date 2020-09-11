@@ -113,8 +113,8 @@ class NativePhpCommandSerializerTest extends TestCase
             ? 'O:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":1:{'
                 . 's:9:\"parameter\";s:5:\"value\";'
                 . '}'
-            : 'C:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":34:{a:1:{'
-                . 's:9:\"parameter\";s:5:\"value\";'
+            : 'C:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":38:{a:1:{'
+                . 's:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";'
                 . '}}';
 
         return [[CommandStub::instance(['parameter' => 'value']), $serialized]];
@@ -131,10 +131,10 @@ class NativePhpCommandSerializerTest extends TestCase
                 . 'O:39:\\\\\\"Gears\\\\\\\\CQRS\\\\\\\\Async\\\\\\\\Tests\\\\\\\\Stub\\\\\\\\CommandStub\\\\\\":1:{'
                 . 's:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";'
                 . '}\";}'
-            : 'C:30:\"Gears\\\\CQRS\\\\Async\\\\QueuedCommand\":127:{a:1:{'
+            : 'C:30:\"Gears\\\\CQRS\\\\Async\\\\QueuedCommand\":135:{a:1:{'
                 . 's:14:\\\\\\"wrappedCommand\\\\\\";'
-                . 'C:39:\\\\\\"Gears\\\\\\\\CQRS\\\\\\\\Async\\\\\\\\Tests\\\\\\\\Stub\\\\\\\\CommandStub\\\\\\":34:{'
-                . 'a:1:{s:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";}'
+                . 'C:39:\\\\\\"Gears\\\\\\\\CQRS\\\\\\\\Async\\\\\\\\Tests\\\\\\\\Stub\\\\\\\\CommandStub\\\\\\":38:{'
+                . 'a:1:{s:9:\\\\\\\\\\\\\\"parameter\\\\\\\\\\\\\\";s:5:\\\\\\\\\\\\\\"value\\\\\\\\\\\\\\";}'
                 . '}}}';
 
         return [[new QueuedCommand(CommandStub::instance(['parameter' => 'value'])), $serialized]];
