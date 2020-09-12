@@ -53,14 +53,14 @@ class QueuedCommandTest extends TestCase
         static::assertSame($originalCommand, $command->getWrappedCommand());
     }
 
-    public function testGetPayloadException(): void
+    public function testGetPayload(): void
     {
         $command = CommandStub::instance([]);
 
         static::assertSame(['wrappedCommand' => $command], (new QueuedCommand($command))->getPayload());
     }
 
-    public function testToArrayException(): void
+    public function testToArray(): void
     {
         $command = CommandStub::instance([]);
 

@@ -27,12 +27,12 @@ class NativePhpCommandSerializerTest extends TestCase
     /**
      * @dataProvider serializationProvider
      *
-     * @param CommandStub $stub
+     * @param CommandStub $command
      * @param string      $serialized
      */
-    public function testSerialize(CommandStub $stub, string $serialized): void
+    public function testSerialize(CommandStub $command, string $serialized): void
     {
-        static::assertEquals($serialized, (new NativePhpCommandSerializer())->serialize($stub));
+        static::assertEquals($serialized, (new NativePhpCommandSerializer())->serialize($command));
     }
 
     /**
@@ -49,13 +49,13 @@ class NativePhpCommandSerializerTest extends TestCase
     /**
      * @dataProvider serializationProvider
      *
-     * @param CommandStub $stub
+     * @param CommandStub $command
      * @param string      $serialized
      */
-    public function testDeserialize(CommandStub $stub, string $serialized): void
+    public function testDeserialize(CommandStub $command, string $serialized): void
     {
         static::assertEquals(
-            $stub->getPayload(),
+            $command->getPayload(),
             (new NativePhpCommandSerializer())->fromSerialized($serialized)->getPayload()
         );
     }
