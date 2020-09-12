@@ -88,8 +88,8 @@ class NativePhpCommandSerializerTest extends TestCase
         $this->expectExceptionMessageRegExp('/^Command deserialization failed: command class ".+" cannot be found$/');
 
         $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
-            ? 'O:42:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\NotStub\\\\CommandStub\":0:{}'
-            : 'C:42:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\NotStub\\\\CommandStub\":0:{}';
+            ? 'O:42:"Gears\\\\CQRS\\\\Async\\\\Tests\\\\NotStub\\\\CommandStub":0:{}'
+            : 'C:42:"Gears\\\\CQRS\\\\Async\\\\Tests\\\\NotStub\\\\CommandStub":0:{}';
 
         (new NativePhpCommandSerializer())->fromSerialized($serialized);
     }
@@ -110,11 +110,11 @@ class NativePhpCommandSerializerTest extends TestCase
     public function serializationProvider(): array
     {
         $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
-            ? 'O:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":1:{'
+            ? 'O:39:\\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\\":1:{'
                 . 's:9:\"parameter\";s:5:\"value\";'
                 . '}'
-            : 'C:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":38:{a:1:{'
-                . 's:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";'
+            : 'C:39:\\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\\":34:{a:1:{'
+                . 's:9:\\"parameter\\";s:5:\\"value\\";'
                 . '}}';
 
         return [[CommandStub::instance(['parameter' => 'value']), $serialized]];
@@ -126,16 +126,16 @@ class NativePhpCommandSerializerTest extends TestCase
     public function queuedSerializationProvider(): array
     {
         $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
-            ? 'O:30:\"Gears\\\\CQRS\\\\Async\\\\QueuedCommand\":1:{'
-                . 's:14:\"wrappedCommand\";s:90:\"'
-                . 'O:39:\\\\\\"Gears\\\\\\\\CQRS\\\\\\\\Async\\\\\\\\Tests\\\\\\\\Stub\\\\\\\\CommandStub\\\\\\":1:{'
-                . 's:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";'
+            ? 'O:30:\\"Gears\\\\CQRS\\\\Async\\\\QueuedCommand\\":1:{'
+                . 's:14:\\"wrappedCommand\\";s:79:\"'
+                . 'O:39:\\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\\":1:{'
+                . 's:9:\\"parameter\\";s:5:\\"value\\";'
                 . '}\";}'
-            : 'C:30:\"Gears\\\\CQRS\\\\Async\\\\QueuedCommand\":135:{a:1:{'
-                . 's:14:\\\\\\"wrappedCommand\\\\\\";'
-                . 'C:39:\\\\\\"Gears\\\\\\\\CQRS\\\\\\\\Async\\\\\\\\Tests\\\\\\\\Stub\\\\\\\\CommandStub\\\\\\":38:{'
-                . 'a:1:{s:9:\\\\\\\\\\\\\\"parameter\\\\\\\\\\\\\\";s:5:\\\\\\\\\\\\\\"value\\\\\\\\\\\\\\";}'
-                . '}}}';
+            : 'C:30:\\"Gears\\\\CQRS\\\\Async\\\\QueuedCommand\\":114:{a:1:{'
+                . 's:14:\\"wrappedCommand\\";'
+                . 'C:39:\\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\\":34:{a:1:{'
+                . 's:9:\\"parameter\\";s:5:\\"value\\";'
+                . '}}}}';
 
         return [[new QueuedCommand(CommandStub::instance(['parameter' => 'value'])), $serialized]];
     }

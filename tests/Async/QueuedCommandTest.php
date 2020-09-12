@@ -82,12 +82,12 @@ class QueuedCommandTest extends TestCase
 
         $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
             ? 'O:30:"Gears\CQRS\Async\QueuedCommand":1:{'
-                . 's:14:"wrappedCommand";s:90:"O:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":1:{'
-                . 's:9:\"parameter\";s:5:\"value\";'
+                . 's:14:"wrappedCommand";s:79:"O:39:"Gears\\CQRS\\Async\\Tests\\Stub\\CommandStub":1:{'
+                . 's:9:"parameter";s:5:"value";'
                 . '}";}'
-            : 'C:30:"Gears\CQRS\Async\QueuedCommand":135:{a:1:{'
-                . 's:14:\"wrappedCommand\";C:39:\"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub\":38:{a:1:{'
-                . 's:9:\\\\\\"parameter\\\\\\";s:5:\\\\\\"value\\\\\\";'
+            : 'C:30:"Gears\CQRS\Async\QueuedCommand":114:{a:1:{'
+                . 's:14:"wrappedCommand";C:39:"Gears\\CQRS\\Async\\Tests\\Stub\\CommandStub":34:{a:1:{'
+                . 's:9:"parameter";s:5:"value";'
                 . '}}}}';
 
         static::assertSame($serialized, \serialize($stub));

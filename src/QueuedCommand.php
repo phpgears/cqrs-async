@@ -107,7 +107,7 @@ final class QueuedCommand implements Command, \Serializable
      */
     public function __serialize(): array
     {
-        return ['wrappedCommand' => \addslashes(\serialize($this->wrappedCommand))];
+        return ['wrappedCommand' => \serialize($this->wrappedCommand)];
     }
 
     /**
@@ -117,7 +117,7 @@ final class QueuedCommand implements Command, \Serializable
      */
     public function __unserialize(array $data): void
     {
-        $this->wrappedCommand = \unserialize(\stripslashes($data['wrappedCommand']));
+        $this->wrappedCommand = \unserialize($data['wrappedCommand']);
     }
 
     /**
@@ -125,7 +125,7 @@ final class QueuedCommand implements Command, \Serializable
      */
     public function serialize(): string
     {
-        return \addslashes(\serialize(['wrappedCommand' => $this->wrappedCommand]));
+        return \serialize(['wrappedCommand' => $this->wrappedCommand]);
     }
 
     /**
@@ -135,7 +135,7 @@ final class QueuedCommand implements Command, \Serializable
      */
     public function unserialize($serialized): void
     {
-        $data = \unserialize(\stripslashes($serialized));
+        $data = \unserialize($serialized);
 
         $this->wrappedCommand = $data['wrappedCommand'];
     }
