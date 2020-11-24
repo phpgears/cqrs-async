@@ -56,7 +56,7 @@ final class JsonCommandSerializer implements CommandSerializer
         // @codeCoverageIgnoreStart
         if ($serialized === false || \json_last_error() !== \JSON_ERROR_NONE) {
             throw new CommandSerializationException(\sprintf(
-                'Error serializing command %s due to %s',
+                'Error serializing command %s due to %s.',
                 \get_class($command),
                 \lcfirst(\json_last_error_msg())
             ));
@@ -74,12 +74,12 @@ final class JsonCommandSerializer implements CommandSerializer
         ['class' => $commandClass, 'payload' => $payload] = $this->getCommandDefinition($serialized);
 
         if (!\class_exists($commandClass)) {
-            throw new CommandSerializationException(\sprintf('Command class %s cannot be found', $commandClass));
+            throw new CommandSerializationException(\sprintf('Command class %s cannot be found.', $commandClass));
         }
 
         if (!\in_array(Command::class, \class_implements($commandClass), true)) {
             throw new CommandSerializationException(\sprintf(
-                'Command class must implement %s, %s given',
+                'Command class must implement %s, %s given.',
                 Command::class,
                 $commandClass
             ));
@@ -94,7 +94,7 @@ final class JsonCommandSerializer implements CommandSerializer
             /* @var Command $commandClass */
             return $commandClass::reconstitute($payload);
         } catch (\Exception $exception) {
-            throw new CommandSerializationException('Error reconstituting command', 0, $exception);
+            throw new CommandSerializationException('Error reconstituting command.', 0, $exception);
         }
         // @codeCoverageIgnoreEnd
     }
@@ -111,7 +111,7 @@ final class JsonCommandSerializer implements CommandSerializer
     private function getCommandDefinition(string $serialized): array
     {
         if (\trim($serialized) === '') {
-            throw new CommandSerializationException('Malformed JSON serialized command: empty string');
+            throw new CommandSerializationException('Malformed JSON serialized command: empty string.');
         }
 
         $definition = \json_decode($serialized, true, 512, static::JSON_DECODE_OPTIONS);
@@ -119,7 +119,7 @@ final class JsonCommandSerializer implements CommandSerializer
         // @codeCoverageIgnoreStart
         if ($definition === null || \json_last_error() !== \JSON_ERROR_NONE) {
             throw new CommandSerializationException(\sprintf(
-                'Command deserialization failed due to error %s: %s',
+                'Command deserialization failed due to error %s: %s.',
                 \json_last_error(),
                 \lcfirst(\json_last_error_msg())
             ));
@@ -132,7 +132,7 @@ final class JsonCommandSerializer implements CommandSerializer
             || !\is_string($definition['class'])
             || !\is_array($definition['payload'])
         ) {
-            throw new CommandSerializationException('Malformed JSON serialized command');
+            throw new CommandSerializationException('Malformed JSON serialized command.');
         }
 
         return $definition;
