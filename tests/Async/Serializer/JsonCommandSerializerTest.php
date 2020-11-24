@@ -49,7 +49,7 @@ class JsonCommandSerializerTest extends TestCase
     public function testEmptyDeserialization(): void
     {
         $this->expectException(CommandSerializationException::class);
-        $this->expectExceptionMessage('Malformed JSON serialized command: empty string');
+        $this->expectExceptionMessage('Malformed JSON serialized command: empty string.');
 
         (new JsonCommandSerializer())->fromSerialized('    ');
     }
@@ -57,7 +57,7 @@ class JsonCommandSerializerTest extends TestCase
     public function testMissingPartsDeserialization(): void
     {
         $this->expectException(CommandSerializationException::class);
-        $this->expectExceptionMessage('Malformed JSON serialized command');
+        $this->expectExceptionMessage('Malformed JSON serialized command.');
 
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub"}');
@@ -66,7 +66,7 @@ class JsonCommandSerializerTest extends TestCase
     public function testWrongTypeDeserialization(): void
     {
         $this->expectException(CommandSerializationException::class);
-        $this->expectExceptionMessage('Malformed JSON serialized command');
+        $this->expectExceptionMessage('Malformed JSON serialized command.');
 
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\CQRS\\\\Async\\\\Tests\\\\Stub\\\\CommandStub",'
@@ -76,7 +76,7 @@ class JsonCommandSerializerTest extends TestCase
     public function testMissingClassDeserialization(): void
     {
         $this->expectException(CommandSerializationException::class);
-        $this->expectExceptionMessage('Command class Gears\Unknown cannot be found');
+        $this->expectExceptionMessage('Command class Gears\Unknown cannot be found.');
 
         (new JsonCommandSerializer())
             ->fromSerialized('{"class":"Gears\\\\Unknown","payload":{"identifier":"1234"}}');
@@ -86,7 +86,7 @@ class JsonCommandSerializerTest extends TestCase
     {
         $this->expectException(CommandSerializationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Command class must implement .+\\\Command, .+\\\JsonCommandSerializer given$/'
+            '/^Command class must implement .+\\\Command, .+\\\JsonCommandSerializer given\.$/'
         );
 
         (new JsonCommandSerializer())

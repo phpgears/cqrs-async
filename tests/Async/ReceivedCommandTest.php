@@ -32,7 +32,7 @@ class ReceivedCommandTest extends TestCase
     public function testTypeException(): void
     {
         $this->expectException(ReceivedCommandException::class);
-        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getCommandType should not be called');
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getCommandType should not be called.');
 
         (new ReceivedCommand(CommandStub::instance([])))->getCommandType();
     }
@@ -40,7 +40,7 @@ class ReceivedCommandTest extends TestCase
     public function testHasException(): void
     {
         $this->expectException(ReceivedCommandException::class);
-        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::has should not be called');
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::has should not be called.');
 
         (new ReceivedCommand(CommandStub::instance([])))->has('');
     }
@@ -48,7 +48,7 @@ class ReceivedCommandTest extends TestCase
     public function testGetException(): void
     {
         $this->expectException(ReceivedCommandException::class);
-        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::get should not be called');
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::get should not be called.');
 
         (new ReceivedCommand(CommandStub::instance([])))->get('');
     }
@@ -56,7 +56,7 @@ class ReceivedCommandTest extends TestCase
     public function testGetPayloadException(): void
     {
         $this->expectException(ReceivedCommandException::class);
-        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getPayload should not be called');
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::getPayload should not be called.');
 
         (new ReceivedCommand(CommandStub::instance([])))->getPayload();
     }
@@ -64,7 +64,7 @@ class ReceivedCommandTest extends TestCase
     public function testReconstituteException(): void
     {
         $this->expectException(ReceivedCommandException::class);
-        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::reconstitute should not be called');
+        $this->expectExceptionMessage('Method Gears\CQRS\Async\ReceivedCommand::reconstitute should not be called.');
 
         ReceivedCommand::reconstitute([]);
     }

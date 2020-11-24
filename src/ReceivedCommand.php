@@ -50,7 +50,7 @@ final class ReceivedCommand implements Command
      */
     public function getCommandType(): string
     {
-        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called.', __METHOD__));
     }
 
     /**
@@ -60,7 +60,7 @@ final class ReceivedCommand implements Command
      */
     public function has(string $parameter): bool
     {
-        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called.', __METHOD__));
     }
 
     /**
@@ -72,7 +72,7 @@ final class ReceivedCommand implements Command
      */
     public function get(string $parameter)
     {
-        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called.', __METHOD__));
     }
 
     /**
@@ -84,7 +84,7 @@ final class ReceivedCommand implements Command
      */
     public function getPayload(): array
     {
-        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called.', __METHOD__));
     }
 
     /**
@@ -94,6 +94,6 @@ final class ReceivedCommand implements Command
      */
     public static function reconstitute(array $parameters): void
     {
-        throw new ReceivedCommandException(\sprintf('Method %s should not be called ', __METHOD__));
+        throw new ReceivedCommandException(\sprintf('Method %s should not be called.', __METHOD__));
     }
 }
